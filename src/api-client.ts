@@ -26,6 +26,44 @@ export class ApiError extends Error {
   }
 }
 
+interface CacheEntry<T> {
+  data: T;
+  expiresAt: number;
+}
+
+const DEFAULT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+export class ResponseCache {
+  private store = new Map<string, CacheEntry<unknown>>();
+  private ttl: number;
+
+  constructor(ttl = DEFAULT_CACHE_TTL) {
+    this.ttl = ttl;
+  }
+
+  get<T>(key: string): T | undefined {
+    const entry = this.store.get(key);
+    if (!entry) return undefined;
+    if (Date.now() > entry.expiresAt) {
+      this.store.delete(key);
+      return undefined;
+    }
+    return entry.data as T;
+  }
+
+  set<T>(key: string, data: T): void {
+    this.store.set(key, { data, expiresAt: Date.now() + this.ttl });
+  }
+
+  clear(): void {
+    this.store.clear();
+  }
+
+  get size(): number {
+    return this.store.size;
+  }
+}
+
 export interface SearchParams {
   query: string;
   type?: string;
@@ -44,10 +82,12 @@ export interface SearchParams {
 export class TorrentClawClient {
   private baseUrl: string;
   private userAgent: string;
+  readonly cache: ResponseCache;
 
-  constructor() {
+  constructor(cacheTtl?: number) {
     this.baseUrl = config.apiUrl;
     this.userAgent = `torrentclaw-mcp/${config.version}`;
+    this.cache = new ResponseCache(cacheTtl);
   }
 
   private async request<T>(
@@ -62,6 +102,10 @@ export class TorrentClawClient {
         }
       }
     }
+
+    const cacheKey = url.toString();
+    const cached = this.cache.get<T>(cacheKey);
+    if (cached !== undefined) return cached;
 
     const response = await fetch(url.toString(), {
       headers: {
@@ -83,7 +127,9 @@ export class TorrentClawClient {
       throw new ApiError(response.status, body);
     }
 
-    return response.json() as Promise<T>;
+    const data = (await response.json()) as T;
+    this.cache.set(cacheKey, data);
+    return data;
   }
 
   async search(params: SearchParams): Promise<SearchResponse> {
