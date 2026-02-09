@@ -24,11 +24,14 @@ export function validateApiUrl(raw: string): string {
     );
   }
 
-  const hostname = parsed.hostname.replace(/^\[|\]$/g, "");
-  if (PRIVATE_IP_PATTERNS.some((re) => re.test(hostname))) {
-    throw new Error(
-      `Invalid TORRENTCLAW_API_URL: private/reserved addresses not allowed`,
-    );
+  const allowPrivate = process.env.TORRENTCLAW_ALLOW_PRIVATE === "true";
+  if (!allowPrivate) {
+    const hostname = parsed.hostname.replace(/^\[|\]$/g, "");
+    if (PRIVATE_IP_PATTERNS.some((re) => re.test(hostname))) {
+      throw new Error(
+        `Invalid TORRENTCLAW_API_URL: private/reserved addresses not allowed. Set TORRENTCLAW_ALLOW_PRIVATE=true for self-hosted setups.`,
+      );
+    }
   }
 
   return raw;
