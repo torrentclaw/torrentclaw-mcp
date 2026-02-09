@@ -1,0 +1,58 @@
+{
+  "name": "torrentclaw-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for TorrentClaw — search and discover movies and TV shows with torrent downloads, magnet links, streaming availability, and cast/crew metadata",
+  "type": "module",
+  "bin": {
+    "torrentclaw-mcp": "./build/index.js"
+  },
+  "main": "./build/index.js",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && chmod 755 build/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "torrent",
+    "movies",
+    "tv-shows",
+    "search",
+    "torrentclaw",
+    "claude",
+    "ai",
+    "streaming",
+    "magnet",
+    "download",
+    "llm",
+    "agent",
+    "media"
+  ],
+  "author": "buryni",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buryni/torrentclaw-mcp"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^4.0.18",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.0"
+  }
+}
