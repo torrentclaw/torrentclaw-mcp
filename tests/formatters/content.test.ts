@@ -396,6 +396,128 @@ describe("formatSearchResults", () => {
     expect(text).toContain("10.0 GB");
   });
 
+  it("compact mode uses short magnet links", () => {
+    const hash = "aaf1e71c0a0e3b1c0f1a2b3c4d5e6f7a8b9c0d1e";
+    const fullMagnet = `magnet:?xt=urn:btih:${hash}&dn=Inception&tr=udp://tracker.example.com:6969&tr=udp://tracker2.example.com:6969`;
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 42,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "movie",
+          title: "Inception",
+          titleOriginal: null,
+          year: 2010,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: hash,
+              quality: "1080p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "2147483648",
+              seeders: 100,
+              leechers: 5,
+              magnetUrl: fullMagnet,
+              source: "yts",
+              qualityScore: 85,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    const compact = formatSearchResults(response, { compact: true });
+    const full = formatSearchResults(response);
+
+    // Compact: short magnet with just the hash
+    expect(compact).toContain(`magnet:?xt=urn:btih:${hash}`);
+    // Compact: no tracker URLs
+    expect(compact).not.toContain("tracker.example.com");
+    // Full: includes the full magnet URL with trackers
+    expect(full).toContain(fullMagnet);
+    // Compact output should be shorter
+    expect(compact.length).toBeLessThan(full.length);
+    // Both include the info hash
+    expect(compact).toContain(`Info hash: ${hash}`);
+    expect(full).toContain(`Info hash: ${hash}`);
+  });
+
+  it("compact mode generates magnet even when magnetUrl is null", () => {
+    const hash = "b".repeat(40);
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "movie",
+          title: "No Magnet",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: hash,
+              quality: "720p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "1073741824",
+              seeders: 10,
+              leechers: 0,
+              magnetUrl: null,
+              source: "test",
+              qualityScore: 50,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    const compact = formatSearchResults(response, { compact: true });
+    const full = formatSearchResults(response);
+
+    // Compact always generates a magnet from info_hash
+    expect(compact).toContain(`magnet:?xt=urn:btih:${hash}`);
+    // Full mode: no magnet when magnetUrl is null
+    expect(full).not.toContain("Magnet:");
+  });
+
   it("shows streaming info when available", () => {
     const response: SearchResponse = {
       total: 1,

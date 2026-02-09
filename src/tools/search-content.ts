@@ -94,6 +94,12 @@ export function registerSearchContent(
         .describe(
           "ISO 3166-1 country code for streaming availability (e.g. US, ES, GB, DE). If provided, results include which streaming services offer each title. If omitted, no streaming data is returned.",
         ),
+      compact: z
+        .boolean()
+        .default(false)
+        .describe(
+          "When true, returns shorter magnet links (hash only, no trackers) to reduce output size. Magnets are still clickable. Recommended for large result sets or when context window is limited.",
+        ),
     },
     async (params) => {
       try {
@@ -111,7 +117,14 @@ export function registerSearchContent(
           limit: params.limit ?? 10,
           country: params.country,
         });
-        return { content: [{ type: "text", text: formatSearchResults(data) }] };
+        return {
+          content: [
+            {
+              type: "text",
+              text: formatSearchResults(data, { compact: params.compact }),
+            },
+          ],
+        };
       } catch (error) {
         const message =
           error instanceof ApiError

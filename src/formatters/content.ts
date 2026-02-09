@@ -29,7 +29,7 @@ function truncate(text: string, max: number): string {
   return text.slice(0, max - 3) + "...";
 }
 
-function formatTorrent(t: TorrentInfo): string {
+function formatTorrent(t: TorrentInfo, compact?: boolean): string {
   const parts: string[] = [];
   if (t.quality) parts.push(t.quality);
   if (t.sourceType) parts.push(t.sourceType);
@@ -43,11 +43,24 @@ function formatTorrent(t: TorrentInfo): string {
   let line = `  - ${label} (${size}) | ${seeds}`;
   if (score) line += ` | ${score}`;
   line += `\n    Info hash: ${t.infoHash}`;
-  if (t.magnetUrl) line += `\n    Magnet: ${t.magnetUrl}`;
+  if (compact) {
+    // Short magnet (hash only, no trackers) — still clickable, saves ~200 chars per torrent
+    line += `\n    Magnet: magnet:?xt=urn:btih:${t.infoHash}`;
+  } else if (t.magnetUrl) {
+    line += `\n    Magnet: ${t.magnetUrl}`;
+  }
   return line;
 }
 
-function formatResult(r: SearchResult, index: number): string {
+export interface FormatOptions {
+  compact?: boolean;
+}
+
+function formatResult(
+  r: SearchResult,
+  index: number,
+  opts?: FormatOptions,
+): string {
   const lines: string[] = [];
   const yearStr = r.year ? ` (${r.year})` : "";
   lines.push(`${index}. ${r.title}${yearStr} [${r.contentType}]`);
@@ -65,7 +78,7 @@ function formatResult(r: SearchResult, index: number): string {
       .slice(0, 5);
     lines.push(`   Torrents (${r.torrents.length} total, top ${top.length}):`);
     for (const t of top) {
-      lines.push(formatTorrent(t));
+      lines.push(formatTorrent(t, opts?.compact));
     }
   } else {
     lines.push("   No torrents available");
@@ -92,13 +105,16 @@ function formatResult(r: SearchResult, index: number): string {
   return lines.join("\n");
 }
 
-export function formatSearchResults(data: SearchResponse): string {
+export function formatSearchResults(
+  data: SearchResponse,
+  opts?: FormatOptions,
+): string {
   if (data.results.length === 0) {
     return "No results found. Try: (1) a shorter or alternate title, (2) removing filters like quality or year, (3) checking spelling. You can also try get_popular or get_recent to browse available content.";
   }
 
   const header = `Found ${data.total} results (page ${data.page}, showing ${data.results.length}):`;
-  const results = data.results.map((r, i) => formatResult(r, i + 1));
+  const results = data.results.map((r, i) => formatResult(r, i + 1, opts));
   return [header, "", ...results].join("\n");
 }
 
