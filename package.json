@@ -4,7 +4,7 @@
   "description": "MCP server for TorrentClaw — search and discover movies and TV shows with torrent downloads, magnet links, streaming availability, and cast/crew metadata",
   "type": "module",
   "bin": {
-    "torrentclaw-mcp": "./build/index.js"
+    "torrentclaw-mcp": "build/index.js"
   },
   "main": "./build/index.js",
   "files": [
@@ -48,7 +48,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/torrentclaw/torrentclaw-mcp"
+    "url": "git+https://github.com/torrentclaw/torrentclaw-mcp.git"
   },
   "homepage": "https://github.com/torrentclaw/torrentclaw-mcp#readme",
   "bugs": {
