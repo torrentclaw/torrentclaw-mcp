@@ -47,12 +47,12 @@ describe("get_recent tool", () => {
     expect(result.content[0].text).toContain("[show]");
   });
 
-  it("defaults limit to 10", async () => {
+  it("defaults limit to 12", async () => {
     const getRecentMock = vi.fn().mockResolvedValue({
       items: [],
       total: 0,
       page: 1,
-      pageSize: 10,
+      pageSize: 12,
     });
     const client = createMockClient({ getRecent: getRecentMock });
     const { server, getToolHandler } = createMockServer();
@@ -61,7 +61,7 @@ describe("get_recent tool", () => {
     const handler = getToolHandler("get_recent");
     await handler({});
 
-    expect(getRecentMock).toHaveBeenCalledWith(10, undefined);
+    expect(getRecentMock).toHaveBeenCalledWith(12, undefined, undefined);
   });
 
   it("returns isError on ApiError", async () => {

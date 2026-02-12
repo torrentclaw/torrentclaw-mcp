@@ -1,7 +1,32 @@
 // Response types mirrored from TorrentClaw API (src/types/api.ts)
 
+export interface AudioTrack {
+  lang: string | null;
+  codec: string | null;
+  channels: string | null;
+  title: string | null;
+  default: boolean | null;
+}
+
+export interface SubtitleTrack {
+  lang: string | null;
+  codec: string | null;
+  title: string | null;
+  forced: boolean | null;
+}
+
+export interface VideoInfo {
+  codec: string | null;
+  width: number | null;
+  height: number | null;
+  bitDepth: number | null;
+  hdr: string | null;
+  frameRate: string | null;
+}
+
 export interface TorrentInfo {
   infoHash: string;
+  rawTitle: string | null;
   quality: string | null;
   codec: string | null;
   sourceType: string | null;
@@ -9,6 +34,7 @@ export interface TorrentInfo {
   seeders: number;
   leechers: number;
   magnetUrl: string | null;
+  torrentUrl: string | null;
   source: string;
   qualityScore: number | null;
   uploadedAt: string | null;
@@ -19,6 +45,12 @@ export interface TorrentInfo {
   isProper: boolean | null;
   isRepack: boolean | null;
   isRemastered: boolean | null;
+  season: number | null;
+  episode: number | null;
+  audioTracks: AudioTrack[] | null;
+  subtitleTracks: SubtitleTrack[] | null;
+  videoInfo: VideoInfo | null;
+  scanStatus: string | null;
 }
 
 export interface StreamingProviderItem {
@@ -49,6 +81,7 @@ export interface SearchResult {
   genres: string[] | null;
   ratingImdb: string | null;
   ratingTmdb: string | null;
+  contentUrl: string | null;
   hasTorrents: boolean;
   torrents: TorrentInfo[];
   streaming?: StreamingInfo;
@@ -58,7 +91,37 @@ export interface SearchResponse {
   total: number;
   page: number;
   pageSize: number;
+  parsedSeason?: number;
+  parsedEpisode?: number;
   results: SearchResult[];
+}
+
+export interface AutocompleteItem {
+  id: number;
+  title: string;
+  year: number | null;
+  contentType: string;
+  posterUrl: string | null;
+}
+
+export interface AutocompleteResponse {
+  suggestions: AutocompleteItem[];
+}
+
+export interface TrackRequest {
+  infoHash: string;
+  action: "magnet" | "torrent_download" | "copy";
+}
+
+export interface TrackResponse {
+  ok: boolean;
+}
+
+export interface ScanRequestResponse {
+  status: string;
+  source?: string;
+  createdAt?: string;
+  completedAt?: string;
 }
 
 export interface PopularItem {

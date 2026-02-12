@@ -18,17 +18,28 @@ export function registerGetPopular(
         .min(1)
         .max(24)
         .optional()
-        .describe("Number of items (default: 10)"),
+        .describe("Number of items (default: 12)"),
       page: z
         .number()
         .int()
         .min(1)
         .optional()
         .describe("Page number (default: 1)"),
+      locale: z
+        .string()
+        .regex(/^[a-z]{2}$/, "Must be a lowercase 2-letter language code")
+        .optional()
+        .describe(
+          "Locale for translated titles (e.g. 'es' for Spanish, 'fr' for French). If omitted, returns English.",
+        ),
     },
     async (params) => {
       try {
-        const data = await client.getPopular(params.limit ?? 10, params.page);
+        const data = await client.getPopular(
+          params.limit ?? 12,
+          params.page,
+          params.locale,
+        );
         return {
           content: [{ type: "text", text: formatPopularResults(data) }],
         };

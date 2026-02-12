@@ -10,7 +10,7 @@ export function registerSearchContent(
 ): void {
   server.tool(
     "search_content",
-    "Search for movies and TV shows by title, genre, year, rating, or quality. Returns matching content with metadata (title, year, genres, IMDb/TMDB ratings) and torrent download options (magnet links, quality, seeders, file size). This is the primary tool — use it first when a user asks to find, download, or learn about a movie or TV show. Results include a content_id needed by get_watch_providers and get_credits.",
+    "Search for movies and TV shows by title, genre, year, rating, or quality. Returns matching content with metadata (title, year, genres, IMDb/TMDB ratings) and torrent download options (magnet links, quality, seeders, file size). This is the primary tool — use it first when a user asks to find, download, or learn about a movie or TV show. Results include a content_id needed by get_watch_providers and get_credits. For TV shows, you can filter by season/episode. Season/episode can also be auto-detected from the query (e.g. 'Bluey s01e05').",
     {
       query: z
         .string()
@@ -21,7 +21,7 @@ export function registerSearchContent(
           "Query contains invalid control characters",
         )
         .describe(
-          "Search query — typically a movie or TV show title (e.g. 'The Matrix', 'Breaking Bad'). Supports partial matches.",
+          "Search query — typically a movie or TV show title (e.g. 'The Matrix', 'Breaking Bad'). Supports partial matches. Season/episode can be included in query (e.g. 'Bluey s01e05').",
         ),
       type: z
         .enum(["movie", "show"])
@@ -62,9 +62,58 @@ export function registerSearchContent(
         .describe("Filter torrents by resolution"),
       language: z
         .string()
+        .regex(
+          /^[a-z]{2}$/,
+          "Must be a lowercase 2-letter ISO 639-1 language code",
+        )
         .optional()
         .describe(
           "ISO 639-1 language code to filter torrents (e.g. 'en' for English, 'es' for Spanish, 'fr' for French). Lowercase 2-letter code.",
+        ),
+      audio: z
+        .string()
+        .regex(
+          /^[a-zA-Z0-9.]+$/,
+          "Audio codec must contain only alphanumeric characters and dots",
+        )
+        .optional()
+        .describe(
+          "Filter torrents by audio codec (e.g. 'aac', 'flac', 'atmos', 'opus', 'dts'). Substring match.",
+        ),
+      hdr: z
+        .enum(["hdr10", "dolby_vision", "hdr10plus", "hlg"])
+        .optional()
+        .describe("Filter torrents by HDR format"),
+      availability: z
+        .enum(["all", "available", "unavailable"])
+        .optional()
+        .describe(
+          "Filter by torrent availability: 'available' (has seeders), 'unavailable' (no seeders), 'all' (default).",
+        ),
+      season: z
+        .number()
+        .int()
+        .min(0)
+        .max(99)
+        .optional()
+        .describe(
+          "Season number for TV shows (0-99). Use with type='show' to filter torrents for a specific season.",
+        ),
+      episode: z
+        .number()
+        .int()
+        .min(0)
+        .max(999)
+        .optional()
+        .describe(
+          "Episode number for TV shows (0-999). Use with season to filter torrents for a specific episode.",
+        ),
+      locale: z
+        .string()
+        .regex(/^[a-z]{2}$/, "Must be a lowercase 2-letter language code")
+        .optional()
+        .describe(
+          "Locale for translated titles and overviews (e.g. 'es' for Spanish, 'fr' for French). If omitted, returns English.",
         ),
       sort: z
         .enum(["relevance", "seeders", "year", "rating", "added"])
@@ -74,16 +123,16 @@ export function registerSearchContent(
         .number()
         .int()
         .min(1)
-        .max(100)
+        .max(1000)
         .optional()
-        .describe("Page number (default: 1)"),
+        .describe("Page number (default: 1, max: 1000)"),
       limit: z
         .number()
         .int()
         .min(1)
-        .max(20)
+        .max(50)
         .optional()
-        .describe("Results per page (default: 10, max: 20)"),
+        .describe("Results per page (default: 20, max: 50)"),
       country: z
         .string()
         .regex(
@@ -112,9 +161,15 @@ export function registerSearchContent(
           min_rating: params.min_rating,
           quality: params.quality,
           language: params.language,
+          audio: params.audio,
+          hdr: params.hdr,
+          availability: params.availability,
+          locale: params.locale,
+          season: params.season,
+          episode: params.episode,
           sort: params.sort,
           page: params.page,
-          limit: params.limit ?? 10,
+          limit: params.limit ?? 20,
           country: params.country,
         });
         return {
