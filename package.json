@@ -1,6 +1,6 @@
 {
   "name": "torrentclaw-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server for TorrentClaw — search and discover movies and TV shows with torrent downloads, magnet links, streaming availability, and cast/crew metadata",
   "type": "module",
   "bin": {
