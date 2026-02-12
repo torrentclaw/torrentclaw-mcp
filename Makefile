@@ -1,4 +1,4 @@
-.PHONY: build test fmt lint typecheck version version-next release install-tools hooks clean
+.PHONY: build test fmt lint typecheck version release release-minor release-major install clean
 
 build:
 	npm run build
@@ -17,18 +17,20 @@ lint: fmt typecheck
 version:
 	@node -p "require('./package.json').version"
 
-version-next:
-	@echo "Use: npm version [patch|minor|major] --no-git-tag-version"
-
 release:
-	@echo "Use: npm version <patch|minor|major>, then git push origin v<version>"
+	npm run release
+	@echo "Run: git push --follow-tags origin main"
 
-install-tools:
+release-minor:
+	npm run release:minor
+	@echo "Run: git push --follow-tags origin main"
+
+release-major:
+	npm run release:major
+	@echo "Run: git push --follow-tags origin main"
+
+install:
 	npm install
-	@command -v lefthook >/dev/null 2>&1 || npm install -g lefthook
-
-hooks:
-	lefthook install
 
 clean:
 	rm -rf build coverage
