@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.0](https://github.com/torrentclaw/torrentclaw-mcp/compare/v0.1.0...v0.2.0) (2026-02-12)
+
+### Features
+
+- **mcp:** add season filtering and presentation guide for better UX ([7844b83](https://github.com/torrentclaw/torrentclaw-mcp/commit/7844b83eb3f49323e7b64ca4c4e09868bbce2dd9))
+
 ## 0.1.0 (2026-02-12)
 
 ### Features
