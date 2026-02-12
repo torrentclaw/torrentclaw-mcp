@@ -36,7 +36,8 @@ describe("formatSearchResults", () => {
           title: "Inception",
           titleOriginal: "Inception",
           year: 2010,
-          overview: "A thief who steals corporate secrets through dream-sharing technology.",
+          overview:
+            "A thief who steals corporate secrets through dream-sharing technology.",
           posterUrl: "https://image.tmdb.org/t/p/w500/poster.jpg",
           backdropUrl: null,
           genres: ["Action", "Science Fiction"],
@@ -52,7 +53,8 @@ describe("formatSearchResults", () => {
               sizeBytes: "2147483648",
               seeders: 847,
               leechers: 23,
-              magnetUrl: "magnet:?xt=urn:btih:aaf1e71c0a0e3b1c0f1a2b3c4d5e6f7a8b9c0d1e",
+              magnetUrl:
+                "magnet:?xt=urn:btih:aaf1e71c0a0e3b1c0f1a2b3c4d5e6f7a8b9c0d1e",
               source: "yts",
               qualityScore: 85,
               uploadedAt: "2024-03-15T12:00:00Z",
@@ -561,7 +563,12 @@ describe("formatSearchResults", () => {
 
 describe("formatPopularResults", () => {
   it("formats empty results", () => {
-    const response: PopularResponse = { items: [], total: 0, page: 1, pageSize: 10 };
+    const response: PopularResponse = {
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize: 10,
+    };
     expect(formatPopularResults(response)).toContain("No popular content");
   });
 
@@ -593,7 +600,12 @@ describe("formatPopularResults", () => {
 
 describe("formatRecentResults", () => {
   it("formats empty results", () => {
-    const response: RecentResponse = { items: [], total: 0, page: 1, pageSize: 10 };
+    const response: RecentResponse = {
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize: 10,
+    };
     expect(formatRecentResults(response)).toContain("No recent content");
   });
 

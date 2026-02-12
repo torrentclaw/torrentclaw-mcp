@@ -91,9 +91,7 @@ function formatResult(
         `Stream: ${r.streaming.flatrate.map((p) => p.name).join(", ")}`,
       );
     if (r.streaming.free.length > 0)
-      providers.push(
-        `Free: ${r.streaming.free.map((p) => p.name).join(", ")}`,
-      );
+      providers.push(`Free: ${r.streaming.free.map((p) => p.name).join(", ")}`);
     if (providers.length > 0) lines.push(`   ${providers.join(" | ")}`);
   }
 
@@ -130,7 +128,8 @@ export function formatPopularResults(data: PopularResponse): string {
   }
 
   const header = `Popular content (${data.total} total, page ${data.page}):`;
-  const hint = "(Use search_content with a title to get torrents and full details)";
+  const hint =
+    "(Use search_content with a title to get torrents and full details)";
   const items = data.items.map((item, i) => formatPopularItem(item, i + 1));
   return [header, hint, "", ...items].join("\n");
 }
@@ -152,7 +151,8 @@ export function formatRecentResults(data: RecentResponse): string {
   }
 
   const header = `Recently added content (${data.total} total, page ${data.page}):`;
-  const hint = "(Use search_content with a title to get torrents and full details)";
+  const hint =
+    "(Use search_content with a title to get torrents and full details)";
   const items = data.items.map((item, i) => formatRecentItem(item, i + 1));
   return [header, hint, "", ...items].join("\n");
 }

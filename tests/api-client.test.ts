@@ -98,7 +98,9 @@ describe("TorrentClawClient", () => {
 
   it("constructs torrent download URL", () => {
     const client = new TorrentClawClient();
-    const url = client.getTorrentDownloadUrl("aaf1e71c0a0e3b1c0f1a2b3c4d5e6f7a8b9c0d1e");
+    const url = client.getTorrentDownloadUrl(
+      "aaf1e71c0a0e3b1c0f1a2b3c4d5e6f7a8b9c0d1e",
+    );
     expect(url).toBe(
       "https://torrentclaw.com/api/v1/torrent/aaf1e71c0a0e3b1c0f1a2b3c4d5e6f7a8b9c0d1e",
     );

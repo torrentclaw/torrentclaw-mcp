@@ -9,14 +9,38 @@ describe("formatWatchProviders", () => {
       country: "ES",
       providers: {
         flatrate: [
-          { providerId: 8, name: "Netflix", logo: null, link: null, displayPriority: 1 },
-          { providerId: 337, name: "Disney+", logo: null, link: null, displayPriority: 2 },
+          {
+            providerId: 8,
+            name: "Netflix",
+            logo: null,
+            link: null,
+            displayPriority: 1,
+          },
+          {
+            providerId: 337,
+            name: "Disney+",
+            logo: null,
+            link: null,
+            displayPriority: 2,
+          },
         ],
         rent: [
-          { providerId: 2, name: "Apple TV", logo: null, link: null, displayPriority: 1 },
+          {
+            providerId: 2,
+            name: "Apple TV",
+            logo: null,
+            link: null,
+            displayPriority: 1,
+          },
         ],
         buy: [
-          { providerId: 3, name: "Google Play", logo: null, link: null, displayPriority: 1 },
+          {
+            providerId: 3,
+            name: "Google Play",
+            logo: null,
+            link: null,
+            displayPriority: 1,
+          },
         ],
         free: [],
       },
@@ -66,8 +90,20 @@ describe("formatWatchProviders", () => {
       country: "GB",
       providers: {
         flatrate: [
-          { providerId: 2, name: "Second", logo: null, link: null, displayPriority: 20 },
-          { providerId: 1, name: "First", logo: null, link: null, displayPriority: 1 },
+          {
+            providerId: 2,
+            name: "Second",
+            logo: null,
+            link: null,
+            displayPriority: 20,
+          },
+          {
+            providerId: 1,
+            name: "First",
+            logo: null,
+            link: null,
+            displayPriority: 1,
+          },
         ],
         rent: [],
         buy: [],
@@ -89,7 +125,13 @@ describe("formatWatchProviders", () => {
         rent: [],
         buy: [],
         free: [
-          { providerId: 100, name: "Tubi", logo: null, link: null, displayPriority: 1 },
+          {
+            providerId: 100,
+            name: "Tubi",
+            logo: null,
+            link: null,
+            displayPriority: 1,
+          },
         ],
       },
       attribution: "JustWatch",

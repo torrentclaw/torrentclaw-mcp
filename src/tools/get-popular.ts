@@ -28,10 +28,7 @@ export function registerGetPopular(
     },
     async (params) => {
       try {
-        const data = await client.getPopular(
-          params.limit ?? 10,
-          params.page,
-        );
+        const data = await client.getPopular(params.limit ?? 10, params.page);
         return {
           content: [{ type: "text", text: formatPopularResults(data) }],
         };

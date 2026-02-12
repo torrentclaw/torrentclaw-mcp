@@ -12,29 +12,29 @@ No API key required.
 
 ## Available Tools
 
-| Tool | Description |
-|------|-------------|
-| `search_content` | Search movies/shows with filters (query, type, genre, year, rating, quality, language, sort). Returns content with torrents and magnet links. |
-| `get_popular` | Get popular content ranked by user clicks |
-| `get_recent` | Get recently added content |
-| `get_watch_providers` | Streaming availability by country (Netflix, Disney+, etc.) |
-| `get_credits` | Cast and director for a title |
-| `get_torrent_url` | Get .torrent file download URL from info hash |
+| Tool                  | Description                                                                                                                                   |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `search_content`      | Search movies/shows with filters (query, type, genre, year, rating, quality, language, sort). Returns content with torrents and magnet links. |
+| `get_popular`         | Get popular content ranked by user clicks                                                                                                     |
+| `get_recent`          | Get recently added content                                                                                                                    |
+| `get_watch_providers` | Streaming availability by country (Netflix, Disney+, etc.)                                                                                    |
+| `get_credits`         | Cast and director for a title                                                                                                                 |
+| `get_torrent_url`     | Get .torrent file download URL from info hash                                                                                                 |
 
 ## Resources
 
-| URI | Description |
-|-----|-------------|
+| URI                   | Description                                           |
+| --------------------- | ----------------------------------------------------- |
 | `torrentclaw://stats` | Catalog statistics (content/torrent counts by source) |
 
 ## Prompts
 
-| Prompt | Description |
-|--------|-------------|
-| `search_movie` | Search for a movie by title and get torrents + streaming |
-| `search_show` | Search for a TV show by title and get torrents |
-| `whats_new` | Discover recently added movies and TV shows |
-| `where_to_watch` | Find where to stream, rent, or buy a title |
+| Prompt           | Description                                              |
+| ---------------- | -------------------------------------------------------- |
+| `search_movie`   | Search for a movie by title and get torrents + streaming |
+| `search_show`    | Search for a TV show by title and get torrents           |
+| `whats_new`      | Discover recently added movies and TV shows              |
+| `where_to_watch` | Find where to stream, rent, or buy a title               |
 
 ## Configuration
 
@@ -89,10 +89,10 @@ Point to your own TorrentClaw instance:
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `TORRENTCLAW_API_URL` | `https://torrentclaw.com` | Base URL of the TorrentClaw API |
-| `TORRENTCLAW_ALLOW_PRIVATE` | `false` | Set to `true` to allow private/localhost URLs (for self-hosted setups) |
+| Variable                    | Default                   | Description                                                            |
+| --------------------------- | ------------------------- | ---------------------------------------------------------------------- |
+| `TORRENTCLAW_API_URL`       | `https://torrentclaw.com` | Base URL of the TorrentClaw API                                        |
+| `TORRENTCLAW_ALLOW_PRIVATE` | `false`                   | Set to `true` to allow private/localhost URLs (for self-hosted setups) |
 
 ## Development
 

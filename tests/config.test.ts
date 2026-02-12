@@ -56,15 +56,11 @@ describe("validateApiUrl", () => {
   });
 
   it("rejects 0.0.0.0", () => {
-    expect(() => validateApiUrl("http://0.0.0.0")).toThrow(
-      "private/reserved",
-    );
+    expect(() => validateApiUrl("http://0.0.0.0")).toThrow("private/reserved");
   });
 
   it("rejects 10.x.x.x range", () => {
-    expect(() => validateApiUrl("http://10.0.0.1")).toThrow(
-      "private/reserved",
-    );
+    expect(() => validateApiUrl("http://10.0.0.1")).toThrow("private/reserved");
   });
 
   it("rejects 172.16-31.x.x range", () => {

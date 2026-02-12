@@ -27,9 +27,7 @@ export function formatWatchProviders(data: WatchProvidersResponse): string {
   ].filter(Boolean) as string[];
 
   if (sections.length === 0) {
-    lines.push(
-      `  No watch providers found in ${data.country}.`,
-    );
+    lines.push(`  No watch providers found in ${data.country}.`);
   } else {
     lines.push(...sections);
   }

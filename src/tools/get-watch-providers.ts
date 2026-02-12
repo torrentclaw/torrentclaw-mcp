@@ -27,9 +27,7 @@ export function registerGetWatchProviders(
           "Must be uppercase 2-letter ISO 3166-1 country code",
         )
         .default("US")
-        .describe(
-          "ISO 3166-1 country code (e.g. US, ES, GB, DE). Default: US",
-        ),
+        .describe("ISO 3166-1 country code (e.g. US, ES, GB, DE). Default: US"),
     },
     async (params) => {
       try {
