@@ -47,12 +47,12 @@ describe("get_popular tool", () => {
     expect(result.content[0].text).toContain("200 clicks");
   });
 
-  it("defaults limit to 10", async () => {
+  it("defaults limit to 12", async () => {
     const getPopularMock = vi.fn().mockResolvedValue({
       items: [],
       total: 0,
       page: 1,
-      pageSize: 10,
+      pageSize: 12,
     });
     const client = createMockClient({ getPopular: getPopularMock });
     const { server, getToolHandler } = createMockServer();
@@ -61,7 +61,7 @@ describe("get_popular tool", () => {
     const handler = getToolHandler("get_popular");
     await handler({});
 
-    expect(getPopularMock).toHaveBeenCalledWith(10, undefined);
+    expect(getPopularMock).toHaveBeenCalledWith(12, undefined, undefined);
   });
 
   it("returns isError on ApiError", async () => {

@@ -520,6 +520,468 @@ describe("formatSearchResults", () => {
     expect(full).not.toContain("Magnet:");
   });
 
+  it("shows season and episode in torrent line", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Breaking Bad",
+          titleOriginal: null,
+          year: 2008,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "a".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "1073741824",
+              seeders: 50,
+              leechers: 2,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 70,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 1,
+              episode: 5,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("S01E05");
+  });
+
+  it("shows season without episode", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Some Show",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "b".repeat(40),
+              rawTitle: null,
+              quality: "720p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "500000000",
+              seeders: 10,
+              leechers: 1,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: null,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 3,
+              episode: null,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("S03");
+    expect(text).not.toContain("S03E");
+  });
+
+  it("shows torrentUrl when present", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "movie",
+          title: "Torrent URL Movie",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "c".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "2000000000",
+              seeders: 20,
+              leechers: 1,
+              magnetUrl: null,
+              torrentUrl: "https://example.com/torrent/ccc.torrent",
+              source: "test",
+              qualityScore: null,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: null,
+              episode: null,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("Torrent: https://example.com/torrent/ccc.torrent");
+  });
+
+  it("shows audio tracks with languages and codecs", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "movie",
+          title: "Audio Movie",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "d".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "4000000000",
+              seeders: 30,
+              leechers: 2,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: null,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: null,
+              episode: null,
+              audioTracks: [
+                { lang: "en", codec: "aac", channels: "5.1", title: "English", default: true },
+                { lang: "es", codec: "aac", channels: "5.1", title: "Spanish", default: false },
+                { lang: "en", codec: "ac3", channels: "2.0", title: "Commentary", default: false },
+              ],
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("Audio: en, es");
+    expect(text).toContain("(aac, ac3)");
+  });
+
+  it("shows audio tracks with null lang as ?", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "movie",
+          title: "Unknown Lang Movie",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "f".repeat(40),
+              rawTitle: null,
+              quality: "720p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "1000000000",
+              seeders: 5,
+              leechers: 0,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: null,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: null,
+              episode: null,
+              audioTracks: [
+                { lang: null, codec: null, channels: null, title: null, default: null },
+              ],
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("Audio: ?");
+    // No codecs listed after Audio line when all codecs are null
+    expect(text).not.toMatch(/Audio: \?\s*\(/);
+  });
+
+  it("shows subtitle tracks summary", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "movie",
+          title: "Sub Movie",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "e".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: null,
+              sourceType: null,
+              sizeBytes: "3000000000",
+              seeders: 25,
+              leechers: 3,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: null,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: null,
+              episode: null,
+              audioTracks: null,
+              subtitleTracks: [
+                { lang: "en", codec: "srt", title: "English", forced: false },
+                { lang: "es", codec: "srt", title: "Spanish", forced: false },
+                { lang: "fr", codec: "ass", title: "French", forced: false },
+              ],
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("Subtitles: en, es, fr");
+  });
+
+  it("shows contentUrl when present", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 99,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "movie",
+          title: "URL Movie",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: "https://torrentclaw.com/content/99",
+          hasTorrents: false,
+          torrents: [],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("URL: https://torrentclaw.com/content/99");
+  });
+
+  it("shows parsedSeason and parsedEpisode in header", () => {
+    const response: SearchResponse = {
+      total: 5,
+      page: 1,
+      pageSize: 10,
+      parsedSeason: 2,
+      parsedEpisode: 7,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Test Show",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: false,
+          torrents: [],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("Detected season/episode: S02E07");
+  });
+
+  it("shows parsedSeason only in header (no episode)", () => {
+    const response: SearchResponse = {
+      total: 3,
+      page: 1,
+      pageSize: 10,
+      parsedSeason: 4,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Another Show",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: false,
+          torrents: [],
+        },
+      ],
+    };
+    const text = formatSearchResults(response);
+    expect(text).toContain("Detected season/episode: S04");
+    expect(text).not.toContain("S04E");
+  });
+
   it("shows streaming info when available", () => {
     const response: SearchResponse = {
       total: 1,

@@ -82,7 +82,10 @@ describe("TorrentClawClient", () => {
     await expect(client.search({ query: "test" })).rejects.toThrow(ApiError);
   });
 
-  it("throws ApiError with rate limit message on 429", async () => {
+  it("throws ApiError with rate limit message on 429 after retries", async () => {
+    // With retry logic (MAX_RETRIES=2), need 3 consecutive 429 responses
+    mockFetchError("Too many requests", 429);
+    mockFetchError("Too many requests", 429);
     mockFetchError("Too many requests", 429);
 
     const client = new TorrentClawClient();
@@ -117,6 +120,28 @@ describe("TorrentClawClient", () => {
     expect(calledUrl).toContain("/api/v1/popular");
     expect(calledUrl).toContain("limit=5");
     expect(calledUrl).toContain("page=2");
+  });
+
+  it("includes locale param for popular", async () => {
+    mockFetch({ items: [], total: 0, page: 1, pageSize: 10 });
+
+    const client = new TorrentClawClient();
+    await client.getPopular(10, 1, "es");
+
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    expect(calledUrl).toContain("locale=es");
+  });
+
+  it("includes locale param for recent", async () => {
+    mockFetch({ items: [], total: 0, page: 1, pageSize: 10 });
+
+    const client = new TorrentClawClient();
+    await client.getRecent(10, 1, "fr");
+
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    expect(calledUrl).toContain("locale=fr");
   });
 
   it("calls correct endpoint for watch providers", async () => {
@@ -215,5 +240,102 @@ describe("TorrentClawClient", () => {
       expect(e).toBeInstanceOf(ApiError);
       expect((e as ApiError).body).toBe("");
     }
+  });
+
+  it("calls correct endpoint for autocomplete", async () => {
+    mockFetch({ suggestions: [{ id: 1, title: "Test", year: 2024, contentType: "movie", posterUrl: null }] });
+
+    const client = new TorrentClawClient();
+    const result = await client.autocomplete("test");
+
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    expect(calledUrl).toContain("/api/v1/autocomplete");
+    expect(calledUrl).toContain("q=test");
+    expect(result.suggestions).toHaveLength(1);
+  });
+
+  it("calls correct endpoint for track (POST)", async () => {
+    mockFetch({ ok: true });
+
+    const client = new TorrentClawClient();
+    const result = await client.track("abc123def456abc123def456abc123def456abc1", "magnet");
+
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    const options = fetchMock.mock.calls[0][1] as RequestInit;
+    expect(calledUrl).toContain("/api/v1/track");
+    expect(options.method).toBe("POST");
+    expect(JSON.parse(options.body as string)).toEqual({
+      infoHash: "abc123def456abc123def456abc123def456abc1",
+      action: "magnet",
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("calls correct endpoint for submitScanRequest (POST)", async () => {
+    mockFetch({ status: "pending" });
+
+    const client = new TorrentClawClient();
+    const result = await client.submitScanRequest("abc123def456abc123def456abc123def456abc1", "test@example.com");
+
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    const options = fetchMock.mock.calls[0][1] as RequestInit;
+    expect(calledUrl).toContain("/api/v1/scan-request");
+    expect(options.method).toBe("POST");
+    expect(JSON.parse(options.body as string)).toEqual({
+      infoHash: "abc123def456abc123def456abc123def456abc1",
+      email: "test@example.com",
+      website: "",
+    });
+    expect(result.status).toBe("pending");
+  });
+
+  it("calls correct endpoint for getScanStatus", async () => {
+    mockFetch({ status: "completed", source: "scan_request" });
+
+    const client = new TorrentClawClient();
+    const result = await client.getScanStatus("abc123def456abc123def456abc123def456abc1");
+
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    expect(calledUrl).toContain("/api/v1/scan-request/abc123def456abc123def456abc123def456abc1");
+    expect(result.status).toBe("completed");
+  });
+
+  it("retries on 429 and succeeds", async () => {
+    mockFetchError("Too many requests", 429);
+    mockFetch({ total: 1, page: 1, pageSize: 10, results: [] });
+
+    const client = new TorrentClawClient();
+    const result = await client.search({ query: "test" });
+
+    expect(result.total).toBe(1);
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("includes Authorization header when apiKey is set", async () => {
+    mockFetch({ total: 0, page: 1, pageSize: 10, results: [] });
+
+    const client = new TorrentClawClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (client as any).apiKey = "test-api-key-123";
+    await client.search({ query: "test" });
+
+    const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
+    const options = fetchMock.mock.calls[0][1] as RequestInit;
+    const headers = options.headers as Record<string, string>;
+    expect(headers["Authorization"]).toBe("Bearer test-api-key-123");
+  });
+
+  it("throws ApiError on POST 400 response", async () => {
+    mockFetchError("Invalid body", 400);
+
+    const client = new TorrentClawClient();
+    await expect(
+      client.track("abc123def456abc123def456abc123def456abc1", "magnet"),
+    ).rejects.toThrow(ApiError);
   });
 });

@@ -38,6 +38,7 @@ describe("search_content tool", () => {
           genres: ["Action"],
           ratingImdb: "8.8",
           ratingTmdb: "8.4",
+          contentUrl: null,
           hasTorrents: true,
           torrents: [],
         },
@@ -79,6 +80,12 @@ describe("search_content tool", () => {
       min_rating: 7,
       quality: "1080p",
       language: "es",
+      audio: "atmos",
+      hdr: "dolby_vision",
+      availability: "available",
+      locale: "es",
+      season: 1,
+      episode: 5,
       sort: "seeders",
       page: 2,
       limit: 15,
@@ -94,6 +101,12 @@ describe("search_content tool", () => {
       min_rating: 7,
       quality: "1080p",
       language: "es",
+      audio: "atmos",
+      hdr: "dolby_vision",
+      availability: "available",
+      locale: "es",
+      season: 1,
+      episode: 5,
       sort: "seeders",
       page: 2,
       limit: 15,
@@ -101,11 +114,11 @@ describe("search_content tool", () => {
     });
   });
 
-  it("defaults limit to 10", async () => {
+  it("defaults limit to 20", async () => {
     const searchMock = vi.fn().mockResolvedValue({
       total: 0,
       page: 1,
-      pageSize: 10,
+      pageSize: 20,
       results: [],
     });
     const client = createMockClient({ search: searchMock });
@@ -116,7 +129,7 @@ describe("search_content tool", () => {
     await handler({ query: "test" });
 
     expect(searchMock).toHaveBeenCalledWith(
-      expect.objectContaining({ limit: 10 }),
+      expect.objectContaining({ limit: 20 }),
     );
   });
 

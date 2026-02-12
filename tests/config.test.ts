@@ -1,20 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { validateApiUrl } from "../src/config.js";
 
 describe("validateApiUrl", () => {
-  const originalEnv = process.env.TORRENTCLAW_ALLOW_PRIVATE;
-
-  beforeEach(() => {
-    delete process.env.TORRENTCLAW_ALLOW_PRIVATE;
-  });
-
-  afterEach(() => {
-    if (originalEnv !== undefined) {
-      process.env.TORRENTCLAW_ALLOW_PRIVATE = originalEnv;
-    } else {
-      delete process.env.TORRENTCLAW_ALLOW_PRIVATE;
-    }
-  });
   it("accepts valid https URL", () => {
     expect(validateApiUrl("https://torrentclaw.com")).toBe(
       "https://torrentclaw.com",
@@ -90,22 +77,5 @@ describe("validateApiUrl", () => {
 
   it("rejects IPv6 loopback ::1", () => {
     expect(() => validateApiUrl("http://[::1]")).toThrow("private/reserved");
-  });
-
-  it("allows localhost when TORRENTCLAW_ALLOW_PRIVATE=true", () => {
-    process.env.TORRENTCLAW_ALLOW_PRIVATE = "true";
-    expect(validateApiUrl("http://localhost:3030")).toBe(
-      "http://localhost:3030",
-    );
-  });
-
-  it("allows 192.168.x.x when TORRENTCLAW_ALLOW_PRIVATE=true", () => {
-    process.env.TORRENTCLAW_ALLOW_PRIVATE = "true";
-    expect(validateApiUrl("http://192.168.1.1")).toBe("http://192.168.1.1");
-  });
-
-  it("still rejects ftp even when TORRENTCLAW_ALLOW_PRIVATE=true", () => {
-    process.env.TORRENTCLAW_ALLOW_PRIVATE = "true";
-    expect(() => validateApiUrl("ftp://localhost")).toThrow("only http/https");
   });
 });

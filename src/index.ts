@@ -9,6 +9,9 @@ import { registerGetRecent } from "./tools/get-recent.js";
 import { registerGetWatchProviders } from "./tools/get-watch-providers.js";
 import { registerGetCredits } from "./tools/get-credits.js";
 import { registerGetTorrentUrl } from "./tools/get-torrent-url.js";
+import { registerAutocomplete } from "./tools/autocomplete.js";
+import { registerTrackInteraction } from "./tools/track-interaction.js";
+import { registerScanRequest } from "./tools/scan-request.js";
 import { registerStatsResource } from "./resources/stats.js";
 import { registerPrompts } from "./prompts.js";
 
@@ -18,16 +21,19 @@ const server = new McpServer({
   name: "torrentclaw",
   version: config.version,
   description:
-    "Search and discover movies and TV shows with torrent downloads, streaming availability, and cast/crew metadata. Start with search_content to find content, then use get_watch_providers or get_credits with the content_id. Use get_popular/get_recent to browse (no torrents — search for a title to get torrents).",
+    "Search and discover movies and TV shows with torrent downloads, streaming availability, and cast/crew metadata. Start with autocomplete to validate titles, then search_content for full results with torrents. Use get_watch_providers or get_credits with the content_id. Use get_popular/get_recent to browse. Track interactions with track_interaction and request quality scans with submit_scan_request.",
 });
 
 // Register tools
 registerSearchContent(server, client);
+registerAutocomplete(server, client);
 registerGetPopular(server, client);
 registerGetRecent(server, client);
 registerGetWatchProviders(server, client);
 registerGetCredits(server, client);
 registerGetTorrentUrl(server, client);
+registerTrackInteraction(server, client);
+registerScanRequest(server, client);
 
 // Register resources
 registerStatsResource(server, client);
