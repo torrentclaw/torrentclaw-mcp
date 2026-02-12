@@ -26,10 +26,11 @@ describe("registerPrompts", () => {
     return { server, prompts };
   }
 
-  it("registers 4 prompts", () => {
+  it("registers 5 prompts", () => {
     const { server, prompts } = createMockServer();
     registerPrompts(server);
-    expect(prompts.size).toBe(4);
+    expect(prompts.size).toBe(5);
+    expect(prompts.has("presentation_guide")).toBe(true);
     expect(prompts.has("search_movie")).toBe(true);
     expect(prompts.has("search_show")).toBe(true);
     expect(prompts.has("whats_new")).toBe(true);

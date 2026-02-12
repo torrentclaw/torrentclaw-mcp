@@ -13,6 +13,7 @@ import { registerAutocomplete } from "./tools/autocomplete.js";
 import { registerTrackInteraction } from "./tools/track-interaction.js";
 import { registerScanRequest } from "./tools/scan-request.js";
 import { registerStatsResource } from "./resources/stats.js";
+import { registerPresentationGuideResource } from "./resources/presentation-guide.js";
 import { registerPrompts } from "./prompts.js";
 
 const client = new TorrentClawClient();
@@ -37,6 +38,7 @@ registerScanRequest(server, client);
 
 // Register resources
 registerStatsResource(server, client);
+registerPresentationGuideResource(server);
 
 // Register prompts
 registerPrompts(server);

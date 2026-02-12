@@ -83,6 +83,8 @@ function formatTorrent(t: TorrentInfo, compact?: boolean): string {
 
 export interface FormatOptions {
   compact?: boolean;
+  season?: number;
+  episode?: number;
 }
 
 function formatResult(
@@ -102,12 +104,39 @@ function formatResult(
   }
 
   if (r.torrents.length > 0) {
-    const top = r.torrents
-      .sort((a, b) => (b.qualityScore ?? 0) - (a.qualityScore ?? 0))
-      .slice(0, 5);
-    lines.push(`   Torrents (${r.torrents.length} total, top ${top.length}):`);
-    for (const t of top) {
-      lines.push(formatTorrent(t, opts?.compact));
+    // Filter torrents by season/episode if specified
+    let filteredTorrents = r.torrents;
+    if (opts?.season !== undefined) {
+      filteredTorrents = filteredTorrents.filter(
+        (t) => t.season === opts.season,
+      );
+      if (opts?.episode !== undefined) {
+        filteredTorrents = filteredTorrents.filter(
+          (t) => t.episode === opts.episode,
+        );
+      }
+    }
+
+    if (filteredTorrents.length > 0) {
+      const top = filteredTorrents
+        .sort((a, b) => (b.qualityScore ?? 0) - (a.qualityScore ?? 0))
+        .slice(0, 5);
+      const totalMsg =
+        filteredTorrents.length !== r.torrents.length
+          ? `${filteredTorrents.length} matching, ${r.torrents.length} total`
+          : `${r.torrents.length} total`;
+      lines.push(`   Torrents (${totalMsg}, top ${top.length}):`);
+      for (const t of top) {
+        lines.push(formatTorrent(t, opts?.compact));
+      }
+    } else {
+      const seasonEpStr =
+        opts?.episode !== undefined
+          ? `S${String(opts.season).padStart(2, "0")}E${String(opts.episode).padStart(2, "0")}`
+          : `season ${opts?.season}`;
+      lines.push(
+        `   No torrents available for ${seasonEpStr} (${r.torrents.length} torrents available for other seasons)`,
+      );
     }
   } else {
     lines.push("   No torrents available");
