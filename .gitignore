@@ -19,10 +19,6 @@ desktop.ini
 /tmp/
 *.tmp
 
-# Lefthook
-lefthook-local.yml
-.lefthookrc.local
-
 # Environment
 .env
 .env.local
