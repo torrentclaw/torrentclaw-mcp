@@ -10,7 +10,7 @@ export function registerSearchContent(
 ): void {
   server.tool(
     "search_content",
-    "Search for movies and TV shows by title, genre, year, rating, or quality. Returns matching content with metadata (title, year, genres, IMDb/TMDB ratings) and torrent download options (magnet links, quality, seeders, file size). This is the primary tool — use it first when a user asks to find, download, or learn about a movie or TV show. Results include a content_id needed by get_watch_providers and get_credits. For TV shows, you can filter by season/episode. Season/episode can also be auto-detected from the query (e.g. 'Bluey s01e05').",
+    "Search for movies and TV shows by title, genre, year, rating, or quality. Returns matching content with metadata (title, year, genres, IMDb/TMDB ratings) and torrent download options (magnet links, quality, seeders, file size). This is the primary tool — use it first when a user asks to find, download, or learn about a movie or TV show. Results include a content_id needed by get_watch_providers and get_credits. For TV shows, you can filter by season/episode. Season/episode can also be auto-detected from the query (e.g. 'Bluey s01e05'). IMPORTANT: When presenting results to users, make magnet links clickable using markdown format [Download](magnet:?xt=...), include the contentUrl for browsing all seasons/episodes, and present the information in a user-friendly format rather than raw tables.",
     {
       query: z
         .string()
@@ -176,7 +176,11 @@ export function registerSearchContent(
           content: [
             {
               type: "text",
-              text: formatSearchResults(data, { compact: params.compact }),
+              text: formatSearchResults(data, {
+                compact: params.compact,
+                season: params.season,
+                episode: params.episode,
+              }),
             },
           ],
         };

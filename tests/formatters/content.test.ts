@@ -745,9 +745,27 @@ describe("formatSearchResults", () => {
               season: null,
               episode: null,
               audioTracks: [
-                { lang: "en", codec: "aac", channels: "5.1", title: "English", default: true },
-                { lang: "es", codec: "aac", channels: "5.1", title: "Spanish", default: false },
-                { lang: "en", codec: "ac3", channels: "2.0", title: "Commentary", default: false },
+                {
+                  lang: "en",
+                  codec: "aac",
+                  channels: "5.1",
+                  title: "English",
+                  default: true,
+                },
+                {
+                  lang: "es",
+                  codec: "aac",
+                  channels: "5.1",
+                  title: "Spanish",
+                  default: false,
+                },
+                {
+                  lang: "en",
+                  codec: "ac3",
+                  channels: "2.0",
+                  title: "Commentary",
+                  default: false,
+                },
               ],
               subtitleTracks: null,
               videoInfo: null,
@@ -809,7 +827,13 @@ describe("formatSearchResults", () => {
               season: null,
               episode: null,
               audioTracks: [
-                { lang: null, codec: null, channels: null, title: null, default: null },
+                {
+                  lang: null,
+                  codec: null,
+                  channels: null,
+                  title: null,
+                  default: null,
+                },
               ],
               subtitleTracks: null,
               videoInfo: null,
@@ -1020,6 +1044,346 @@ describe("formatSearchResults", () => {
     const text = formatSearchResults(response);
     expect(text).toContain("Stream: Netflix, Disney+");
     expect(text).toContain("Free: Tubi");
+  });
+
+  it("filters torrents by season when specified", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Test Show",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "a".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: "x264",
+              sourceType: "WEB-DL",
+              sizeBytes: "1073741824",
+              seeders: 100,
+              leechers: 5,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 90,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 1,
+              episode: null,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+            {
+              infoHash: "b".repeat(40),
+              rawTitle: null,
+              quality: "720p",
+              codec: "x264",
+              sourceType: "WEB-DL",
+              sizeBytes: "536870912",
+              seeders: 50,
+              leechers: 2,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 70,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 4,
+              episode: null,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+            {
+              infoHash: "c".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: "x265",
+              sourceType: "WEB-DL",
+              sizeBytes: "805306368",
+              seeders: 75,
+              leechers: 3,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 85,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 4,
+              episode: null,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    // Filter by season 4
+    const text = formatSearchResults(response, { season: 4 });
+    expect(text).toContain("2 matching, 3 total");
+    // Should show season 4 torrents (quality scores 70 and 85)
+    expect(text).toContain("Score: 85");
+    expect(text).toContain("Score: 70");
+    // Should NOT show season 1 torrent (quality score 90)
+    expect(text).not.toContain("Score: 90");
+  });
+
+  it("filters torrents by season and episode when both specified", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Test Show",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "a".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: "x264",
+              sourceType: "WEB-DL",
+              sizeBytes: "1073741824",
+              seeders: 100,
+              leechers: 5,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 90,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 2,
+              episode: 5,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+            {
+              infoHash: "b".repeat(40),
+              rawTitle: null,
+              quality: "720p",
+              codec: "x264",
+              sourceType: "WEB-DL",
+              sizeBytes: "536870912",
+              seeders: 50,
+              leechers: 2,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 70,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 2,
+              episode: 3,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    // Filter by season 2, episode 5
+    const text = formatSearchResults(response, { season: 2, episode: 5 });
+    expect(text).toContain("1 matching, 2 total");
+    // Should show only S02E05 torrent
+    expect(text).toContain("Score: 90");
+    expect(text).toContain("S02E05");
+    // Should NOT show S02E03
+    expect(text).not.toContain("Score: 70");
+  });
+
+  it("shows message when no torrents match the season filter", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Test Show",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "a".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: "x264",
+              sourceType: "WEB-DL",
+              sizeBytes: "1073741824",
+              seeders: 100,
+              leechers: 5,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 90,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 1,
+              episode: null,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    // Filter by season 4 (not available)
+    const text = formatSearchResults(response, { season: 4 });
+    expect(text).toContain("No torrents available for season 4");
+    expect(text).toContain("1 torrents available for other seasons");
+  });
+
+  it("shows message when no torrents match the season+episode filter", () => {
+    const response: SearchResponse = {
+      total: 1,
+      page: 1,
+      pageSize: 10,
+      results: [
+        {
+          id: 1,
+          imdbId: null,
+          tmdbId: null,
+          contentType: "show",
+          title: "Test Show",
+          titleOriginal: null,
+          year: 2024,
+          overview: null,
+          posterUrl: null,
+          backdropUrl: null,
+          genres: null,
+          ratingImdb: null,
+          ratingTmdb: null,
+          contentUrl: null,
+          hasTorrents: true,
+          torrents: [
+            {
+              infoHash: "a".repeat(40),
+              rawTitle: null,
+              quality: "1080p",
+              codec: "x264",
+              sourceType: "WEB-DL",
+              sizeBytes: "1073741824",
+              seeders: 100,
+              leechers: 5,
+              magnetUrl: null,
+              torrentUrl: null,
+              source: "test",
+              qualityScore: 90,
+              uploadedAt: null,
+              languages: [],
+              audioCodec: null,
+              hdrType: null,
+              releaseGroup: null,
+              isProper: null,
+              isRepack: null,
+              isRemastered: null,
+              season: 2,
+              episode: 5,
+              audioTracks: null,
+              subtitleTracks: null,
+              videoInfo: null,
+              scanStatus: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    // Filter by S04E01 (not available)
+    const text = formatSearchResults(response, { season: 4, episode: 1 });
+    expect(text).toContain("No torrents available for S04E01");
+    expect(text).toContain("1 torrents available for other seasons");
   });
 });
 
