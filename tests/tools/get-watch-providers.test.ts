@@ -24,7 +24,13 @@ describe("get_watch_providers tool", () => {
         country: "ES",
         providers: {
           flatrate: [
-            { providerId: 8, name: "Netflix", logo: null, link: null, displayPriority: 1 },
+            {
+              providerId: 8,
+              name: "Netflix",
+              logo: null,
+              link: null,
+              displayPriority: 1,
+            },
           ],
           rent: [],
           buy: [],
@@ -64,7 +70,9 @@ describe("get_watch_providers tool", () => {
 
   it("returns isError on ApiError", async () => {
     const client = createMockClient({
-      getWatchProviders: vi.fn().mockRejectedValue(new ApiError(404, "Not found")),
+      getWatchProviders: vi
+        .fn()
+        .mockRejectedValue(new ApiError(404, "Not found")),
     });
     const { server, getToolHandler } = createMockServer();
     registerGetWatchProviders(server, client);
@@ -78,7 +86,9 @@ describe("get_watch_providers tool", () => {
 
   it("returns isError on generic error", async () => {
     const client = createMockClient({
-      getWatchProviders: vi.fn().mockRejectedValue(new Error("Connection refused")),
+      getWatchProviders: vi
+        .fn()
+        .mockRejectedValue(new Error("Connection refused")),
     });
     const { server, getToolHandler } = createMockServer();
     registerGetWatchProviders(server, client);

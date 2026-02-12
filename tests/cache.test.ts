@@ -110,10 +110,13 @@ describe("TorrentClawClient cache integration", () => {
     (globalThis.fetch as ReturnType<typeof vi.fn>)
       .mockResolvedValueOnce(new Response("Server error", { status: 500 }))
       .mockResolvedValueOnce(
-        new Response(JSON.stringify({ total: 0, page: 1, pageSize: 10, results: [] }), {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        }),
+        new Response(
+          JSON.stringify({ total: 0, page: 1, pageSize: 10, results: [] }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        ),
       );
 
     const client = new TorrentClawClient();

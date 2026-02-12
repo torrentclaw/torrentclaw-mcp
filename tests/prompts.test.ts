@@ -2,9 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerPrompts } from "../src/prompts.js";
 
-type PromptHandler = (
-  params: Record<string, string>,
-) => { messages: { role: string; content: { type: string; text: string } }[] };
+type PromptHandler = (params: Record<string, string>) => {
+  messages: { role: string; content: { type: string; text: string } }[];
+};
 
 describe("registerPrompts", () => {
   function createMockServer() {

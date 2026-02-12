@@ -14,8 +14,7 @@ function createMockClient(overrides: Partial<TorrentClawClient> = {}) {
     getTorrentDownloadUrl: vi
       .fn()
       .mockImplementation(
-        (hash: string) =>
-          `https://torrentclaw.com/api/v1/torrent/${hash}`,
+        (hash: string) => `https://torrentclaw.com/api/v1/torrent/${hash}`,
       ),
     ...overrides,
   } as unknown as TorrentClawClient;

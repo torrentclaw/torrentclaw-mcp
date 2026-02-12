@@ -55,7 +55,9 @@ describe("get_credits tool", () => {
 
   it("returns isError on ApiError", async () => {
     const client = createMockClient({
-      getCredits: vi.fn().mockRejectedValue(new ApiError(503, "TMDB unavailable")),
+      getCredits: vi
+        .fn()
+        .mockRejectedValue(new ApiError(503, "TMDB unavailable")),
     });
     const { server, getToolHandler } = createMockServer();
     registerGetCredits(server, client);
