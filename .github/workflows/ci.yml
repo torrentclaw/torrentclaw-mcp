@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-commits:
+    name: Lint commits
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate conventional commits
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+          pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?(!)?: .{1,}$'
+
+          failed=0
+          while IFS= read -r msg; do
+            first_line=$(echo "$msg" | head -1)
+            if ! echo "$first_line" | grep -qE "$pattern"; then
+              echo "FAIL: $first_line"
+              failed=1
+            fi
+          done < <(git log --format="%s" "$base".."$head")
+
+          if [ "$failed" -eq 1 ]; then
+            echo ""
+            echo "Some commits do not follow Conventional Commits format."
+            echo "Expected: <type>[scope][!]: <description>"
+            echo "See: https://www.conventionalcommits.org/"
+            exit 1
+          fi
+          echo "All commits follow Conventional Commits format."
+
+  build-and-test:
+    name: Build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npx prettier --check .
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
