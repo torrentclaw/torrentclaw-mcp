@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.2](https://github.com/torrentclaw/torrentclaw-mcp/compare/v0.2.1...v0.2.2) (2026-02-16)
+
+### Features
+
+- add glama.json and smithery.yaml for directory listings ([06865a2](https://github.com/torrentclaw/torrentclaw-mcp/commit/06865a2abda420567af7fb3d5046b29ea7de6060))
+
+### Bug Fixes
+
+- update qs to 6.15.0 to resolve CVE denial of service vulnerability ([657910a](https://github.com/torrentclaw/torrentclaw-mcp/commit/657910ad357f14f651d1af1afec0c0cda64513f5))
+
 ## [0.2.1](https://github.com/torrentclaw/torrentclaw-mcp/compare/v0.2.0...v0.2.1) (2026-02-12)
 
 ## [0.2.0](https://github.com/torrentclaw/torrentclaw-mcp/compare/v0.1.0...v0.2.0) (2026-02-12)
