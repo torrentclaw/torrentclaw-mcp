@@ -9,6 +9,10 @@
 
 torrentclaw-mcp is developed by [TorrentClaw](https://torrentclaw.com) as part of its open-source ecosystem. It wraps the TorrentClaw API into the MCP standard so that any compatible AI assistant (Claude, GPT, etc.) can access the platform's search and discovery features natively.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/torrentclaw-torrentclaw-mcp).
+
 ## Quick Start
 
 ```bash
