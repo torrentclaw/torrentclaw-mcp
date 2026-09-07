@@ -243,7 +243,17 @@ describe("TorrentClawClient", () => {
   });
 
   it("calls correct endpoint for autocomplete", async () => {
-    mockFetch({ suggestions: [{ id: 1, title: "Test", year: 2024, contentType: "movie", posterUrl: null }] });
+    mockFetch({
+      suggestions: [
+        {
+          id: 1,
+          title: "Test",
+          year: 2024,
+          contentType: "movie",
+          posterUrl: null,
+        },
+      ],
+    });
 
     const client = new TorrentClawClient();
     const result = await client.autocomplete("test");
@@ -259,7 +269,10 @@ describe("TorrentClawClient", () => {
     mockFetch({ ok: true });
 
     const client = new TorrentClawClient();
-    const result = await client.track("abc123def456abc123def456abc123def456abc1", "magnet");
+    const result = await client.track(
+      "abc123def456abc123def456abc123def456abc1",
+      "magnet",
+    );
 
     const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
     const calledUrl = fetchMock.mock.calls[0][0] as string;
@@ -277,7 +290,10 @@ describe("TorrentClawClient", () => {
     mockFetch({ status: "pending" });
 
     const client = new TorrentClawClient();
-    const result = await client.submitScanRequest("abc123def456abc123def456abc123def456abc1", "test@example.com");
+    const result = await client.submitScanRequest(
+      "abc123def456abc123def456abc123def456abc1",
+      "test@example.com",
+    );
 
     const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
     const calledUrl = fetchMock.mock.calls[0][0] as string;
@@ -296,11 +312,15 @@ describe("TorrentClawClient", () => {
     mockFetch({ status: "completed", source: "scan_request" });
 
     const client = new TorrentClawClient();
-    const result = await client.getScanStatus("abc123def456abc123def456abc123def456abc1");
+    const result = await client.getScanStatus(
+      "abc123def456abc123def456abc123def456abc1",
+    );
 
     const fetchMock = globalThis.fetch as ReturnType<typeof vi.fn>;
     const calledUrl = fetchMock.mock.calls[0][0] as string;
-    expect(calledUrl).toContain("/api/v1/scan-request/abc123def456abc123def456abc123def456abc1");
+    expect(calledUrl).toContain(
+      "/api/v1/scan-request/abc123def456abc123def456abc123def456abc1",
+    );
     expect(result.status).toBe("completed");
   });
 

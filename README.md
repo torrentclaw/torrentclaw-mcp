@@ -21,18 +21,18 @@ No API key required (optional for higher rate limits).
 
 ### Tools
 
-| Tool                  | Description                                                                                                                                  |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tool                  | Description                                                                                                                                                                             |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `search_content`      | Search movies/shows with filters (query, type, genre, year, rating, quality, language, audio, HDR, season, episode, sort). Returns torrents, magnet links, and optional streaming info. |
-| `autocomplete`        | Type-ahead search suggestions (up to 8 results). Use to validate titles before a full search.                                                |
-| `get_popular`         | Get popular content ranked by user clicks                                                                                                    |
-| `get_recent`          | Get recently added content                                                                                                                   |
-| `get_watch_providers` | Streaming availability by country (Netflix, Disney+, etc.)                                                                                   |
-| `get_credits`         | Cast and director for a title                                                                                                                |
-| `get_torrent_url`     | Get .torrent file download URL from info hash                                                                                                |
-| `track_interaction`   | Track user interaction with a torrent (magnet click, download, copy)                                                                         |
-| `submit_scan_request` | Submit a torrent for audio/video quality analysis via [TrueSpec](https://github.com/torrentclaw/truespec)                                    |
-| `get_scan_status`     | Check the status of a torrent scan request                                                                                                   |
+| `autocomplete`        | Type-ahead search suggestions (up to 8 results). Use to validate titles before a full search.                                                                                           |
+| `get_popular`         | Get popular content ranked by user clicks                                                                                                                                               |
+| `get_recent`          | Get recently added content                                                                                                                                                              |
+| `get_watch_providers` | Streaming availability by country (Netflix, Disney+, etc.)                                                                                                                              |
+| `get_credits`         | Cast and director for a title                                                                                                                                                           |
+| `get_torrent_url`     | Get .torrent file download URL from info hash                                                                                                                                           |
+| `track_interaction`   | Track user interaction with a torrent (magnet click, download, copy)                                                                                                                    |
+| `submit_scan_request` | Submit a torrent for audio/video quality analysis via [TrueSpec](https://github.com/torrentclaw/truespec)                                                                               |
+| `get_scan_status`     | Check the status of a torrent scan request                                                                                                                                              |
 
 ### Resources
 
