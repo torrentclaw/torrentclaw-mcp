@@ -140,9 +140,7 @@ describe("get_scan_status tool", () => {
 
   it("returns isError on ApiError", async () => {
     const client = createMockClient({
-      getScanStatus: vi
-        .fn()
-        .mockRejectedValue(new ApiError(404, "Not found")),
+      getScanStatus: vi.fn().mockRejectedValue(new ApiError(404, "Not found")),
     });
     const { server, getToolHandler } = createMockServer();
     registerScanRequest(server, client);
